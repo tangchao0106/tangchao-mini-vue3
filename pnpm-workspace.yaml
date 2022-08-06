@@ -1,0 +1,3 @@
+packages:
+  - "packages/*"
+# 告诉monorepo需要管理的包的路径
