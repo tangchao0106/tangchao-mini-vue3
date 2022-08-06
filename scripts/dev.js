@@ -22,7 +22,7 @@ const outputFormat = format.startsWith("global")
 
 const outfile = resolve(
   __dirname,
-  `../packages/${target}/dist/${target}.${format},js`
+  `../packages/${target}/dist/${target}.${format}.js`
 );
 
 //esbulid 打包配置

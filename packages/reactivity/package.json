@@ -6,17 +6,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-"buildOptions":{
-"name":"VueReactivity",
-"formats":[
-"global",
-"cjs",
-"esm-bundler"
-
-]
-},
-
+  "buildOptions": {
+    "name": "VueReactivity",
+    "formats": [
+      "global",
+      "cjs",
+      "esm-bundler"
+    ]
+  },
   "keywords": [],
-  "author": "",
+  "author": "tangchao",
   "license": "ISC"
 }
