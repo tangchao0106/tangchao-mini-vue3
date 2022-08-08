@@ -28,4 +28,5 @@
 - rm -rf node_modules
 - pnpm tsc --init 生成ts配置文件
 - // "dev": "node scripts/dev.js reactivity -f global"// //指定打包入口路径，指定哪个模块，指定格式
+-sudo -i  npm install ts-node -g 插件code-runner
 

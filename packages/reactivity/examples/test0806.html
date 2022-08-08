@@ -8,15 +8,35 @@
   </head>
   <body>
     <script src="../dist/reactivity.global.js"></script>
-
+    <div id="app"></div>
     <script>
-      const { reactive } = VueReactivity;
+      const { reactive, effect } = VueReactivity;
       const data = { name: "tc", hight: "180" };
       const state1 = reactive(data);
       const state2 = reactive(state1);
 
-      console.log(state2);
+      console.log(state1);
       console.log(state2 === state1);
+      let runner = effect(
+        () => {
+          document.getElementById(
+            "app"
+          ).innerHTML = `${state2.name}---${state1.hight}`;
+        },
+        {
+          scheduler() {
+            console.log("调度器更新自己");
+          },
+        }
+      );
+      // effect 是有返回值的，等同于scopeEffect
+      runner.effect.stop(); //停止收集依赖
+      setTimeout(() => {
+        state1.name = "222222";
+        setTimeout(() => {
+          runner(); //重新渲染
+        }, 2000);
+      }, 1000);
     </script>
   </body>
 </html>

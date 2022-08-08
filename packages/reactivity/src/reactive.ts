@@ -1,5 +1,5 @@
 import { isObject } from "@vue/shared";
-import { activeEffect } from "./effect";
+import { activeEffect, track, trigger } from "./effect";
 // 使用弱引用增加缓存，防止被代理多次
 const reactiveMap = new WeakMap(); //key 只能是对象
 
@@ -24,11 +24,17 @@ export function reactive(target) {
       if (key === ReactiveFlag.IS_REACTIVE) {
         return true;
       }
+      track(target, "get", key);
 
       return Reflect.get(target, key, reactive);
     },
     set(target, key, value, receiver) {
-      return Reflect.set(target, key, value, receiver);
+      let oldValue = target[key];
+      let result = Reflect.set(target, key, value, receiver);
+      if (oldValue != result) {
+        trigger(target, "set", key, value, oldValue);
+      }
+      return result;
     },
   });
   reactiveMap.set(target, proxy);
