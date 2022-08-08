@@ -17,6 +17,7 @@
 
       console.log(state1);
       console.log(state2 === state1);
+      let waiting = false;
       let runner = effect(
         () => {
           document.getElementById(
@@ -26,6 +27,13 @@
         {
           scheduler() {
             console.log("调度器更新自己");
+            if (!waiting) {
+              waiting = true;
+              setTimeout(() => {
+                runner();
+                waiting = false;
+              }, 1000);
+            }
           },
         }
       );

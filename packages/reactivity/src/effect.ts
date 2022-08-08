@@ -9,7 +9,7 @@ export function effect(fn, options: any = {}) {
 
 export let activeEffect = undefined;
 //创建响应式的Effect 副作用函数
-class ReactiveEffect {
+export class ReactiveEffect {
   public active = true; //默认激活状态
   public parent = null;
   public deps = [];
@@ -65,6 +65,15 @@ export function track(target, trpe, key) {
     depsMap.set(key, (dep = new Set()));
     // 存放的是name:new Set()
   }
+  trackEffect(dep);
+  // let shouldTrack = !dep.has(activeEffect); //去重
+  // if (shouldTrack) {
+  //   dep.add(activeEffect);
+  // }
+  // activeEffect.deps.push(dep); //让effect记住对应的dep。清理时候使用
+}
+
+export function trackEffect(dep) {
   let shouldTrack = !dep.has(activeEffect); //去重
   if (shouldTrack) {
     dep.add(activeEffect);
@@ -81,18 +90,34 @@ export function trigger(target, type, key, value, oldValue) {
 
   // 在执行前，先拷贝一份，不要关联引用，否则出现死循环，又删除又添加的情况】】
   if (effects) {
-    effects = new Set(effects);
-
-    effects.forEach((effect) => {
-      //在执行effect的时候，又要执行自己，需要先屏蔽，不用无限调用
-      if (effect !== activeEffect) {
-        if (effect.scheduler) {
-          //如果有调度属性，则执行调度里面的方法，
-          effect.scheduler();
-        } else {
-          effect.run(); //否则默认刷新视图
-        }
-      }
-    });
+    triggerEffect(effect);
+    // effects = new Set(effects);
+    // effects.forEach((effect) => {
+    //   //在执行effect的时候，又要执行自己，需要先屏蔽，不用无限调用
+    //   if (effect !== activeEffect) {
+    //     if (effect.scheduler) {
+    //       //如果有调度属性，则执行调度里面的方法，
+    //       effect.scheduler();
+    //     } else {
+    //       effect.run(); //否则默认刷新视图
+    //     }
+    //   }
+    // });
   }
+}
+//触发依赖
+export function triggerEffect(effects) {
+  effects = new Set(effects);
+
+  effects.forEach((effect) => {
+    //在执行effect的时候，又要执行自己，需要先屏蔽，不用无限调用
+    if (effect !== activeEffect) {
+      if (effect.scheduler) {
+        //如果有调度属性，则执行调度里面的方法，
+        effect.scheduler();
+      } else {
+        effect.run(); //否则默认刷新视图
+      }
+    }
+  });
 }

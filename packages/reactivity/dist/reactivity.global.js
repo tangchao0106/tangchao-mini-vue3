@@ -20,6 +20,7 @@ var VueReactivity = (() => {
   // packages/reactivity/src/index.ts
   var src_exports = {};
   __export(src_exports, {
+    computed: () => computed,
     effect: () => effect,
     reactive: () => reactive
   });
@@ -81,6 +82,9 @@ var VueReactivity = (() => {
     if (!dep) {
       depsMap.set(key, dep = /* @__PURE__ */ new Set());
     }
+    trackEffect(dep);
+  }
+  function trackEffect(dep) {
     let shouldTrack = !dep.has(activeEffect);
     if (shouldTrack) {
       dep.add(activeEffect);
@@ -93,23 +97,30 @@ var VueReactivity = (() => {
       return;
     let effects = depsMap.get(key);
     if (effects) {
-      effects = new Set(effects);
-      effects.forEach((effect2) => {
-        if (effect2 !== activeEffect) {
-          if (effect2.scheduler) {
-            effect2.scheduler();
-          } else {
-            effect2.run();
-          }
-        }
-      });
+      triggerEffect(effect);
     }
+  }
+  function triggerEffect(effects) {
+    effects = new Set(effects);
+    effects.forEach((effect2) => {
+      if (effect2 !== activeEffect) {
+        if (effect2.scheduler) {
+          effect2.scheduler();
+        } else {
+          effect2.run();
+        }
+      }
+    });
   }
 
   // packages/shared/src/index.ts
   var isObject = (value) => {
     return typeof value === "object" && value !== null;
   };
+  var isFunction = (value) => {
+    return typeof value === "function" && value != null;
+  };
+  var isArray = Array.isArray;
 
   // packages/reactivity/src/reactive.ts
   var reactiveMap = /* @__PURE__ */ new WeakMap();
@@ -142,6 +153,47 @@ var VueReactivity = (() => {
     reactiveMap.set(target, proxy);
     return proxy;
   }
+
+  // packages/reactivity/src/computed.ts
+  var computed = (getterOrOptions) => {
+    let onlyGetter = isFunction(getterOrOptions);
+    let getter;
+    let setter;
+    if (onlyGetter) {
+      getter = getterOrOptions;
+      setter = () => console.log("noset");
+    } else {
+      getter = getterOrOptions.get;
+      setter = getterOrOptions.set;
+    }
+    return new ComputedRefImpl(getter, setter);
+  };
+  var ComputedRefImpl = class {
+    constructor(getter, setter) {
+      this.getter = getter;
+      this.setter = setter;
+      this._v_isReadonly = true;
+      this._v_isRef = true;
+      this._dirty = true;
+      this.effect = new ReactiveEffect(getter, () => {
+        if (!this._dirty) {
+          this._dirty = true;
+          triggerEffect(this.dep);
+        }
+      });
+    }
+    get value() {
+      trackEffect(this.dep || (this.dep = /* @__PURE__ */ new Set()));
+      if (this._dirty) {
+        this._dirty = false;
+        this._value = this.effect.run();
+      }
+      return this._value;
+    }
+    set value(newValue) {
+      this.setter(newValue);
+    }
+  };
   return __toCommonJS(src_exports);
 })();
 //# sourceMappingURL=reactivity.global.js.map

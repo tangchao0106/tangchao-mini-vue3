@@ -5,3 +5,6 @@ export const isObject = (value) => {
 export const isFunction = (value) => {
   return typeof value === "function" && value != null;
 };
+
+export const isArray = Array.isArray;
+export const assign = Object.assign;

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script src="../dist/reactivity.global.js"></script>
+    <div id="app"></div>
+    <script>
+      const { effect, reactive, computed } = VueReactivity;
+      const state = reactive({ firstname: "tang", lastname: "chao" });
+      //1 依赖的值发生变化，触发计算属性的effect，然后继续执行外层的effect函数执行
+      //   const fullname = computed({
+      //     get() {
+      //       return state.firstname + "---" + state.lastname;
+      //     },
+      //     set() {
+      //       console.log("----set");
+      //     },
+      //   });
+      const fullname = computed(() => {
+        return state.firstname + "---" + state.lastname;
+      });
+      //计算属性
+      effect(() => {
+        console.log("-----fullname-", fullname.value);
+      });
+    </script>
+  </body>
+</html>
