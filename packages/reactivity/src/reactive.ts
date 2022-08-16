@@ -7,6 +7,10 @@ const enum ReactiveFlag {
   IS_REACTIVE = "v_isReactive",
 }
 
+export function isReactive(value) {
+  return !!value && value[ReactiveFlag.IS_REACTIVE];
+}
+
 export function reactive(target) {
   if (!isObject) return;
   //防止同一个对象被代理多次，增加缓存解决

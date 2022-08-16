@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script src="../dist/reactivity.global.js"></script>
+
+    <script>
+      const { watch, reactive } = VueReactivity;
+      const state = reactive({ name: "tc", addres: { house: "10" } });
+      watch(state, function (newValue, oldValue) {
+        console.log(`newValue ${newValue}   oldValue==${oldValue}`);
+      });
+      setTimeout(() => {
+        state.name = "tangchao";
+      }, 1000);
+    </script>
+  </body>
+</html>
