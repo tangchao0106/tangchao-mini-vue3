@@ -22,7 +22,9 @@ var VueReactivity = (() => {
   __export(src_exports, {
     computed: () => computed,
     effect: () => effect,
+    proxyRefs: () => proxyRefs,
     reactive: () => reactive,
+    ref: () => ref,
     watch: () => watch
   });
 
@@ -232,6 +234,49 @@ var VueReactivity = (() => {
     };
     const effect2 = new ReactiveEffect(getter, job);
     oldValue = effect2.run();
+  }
+
+  // packages/reactivity/src/ref.ts
+  function ref(value) {
+    return new RefImpl(value);
+  }
+  function toReactive(rawValue) {
+    return isObject(rawValue) && reactive(rawValue);
+  }
+  var RefImpl = class {
+    constructor(rawValue) {
+      this.rawValue = rawValue;
+      this.dep = [];
+      this._v_isRef = true;
+      this._value = toReactive(rawValue);
+    }
+    get value() {
+      trackEffect(this.dep);
+      return this._value;
+    }
+    set value(newValue) {
+      if (newValue != this._value) {
+        this._value = toReactive(newValue);
+        this.rawValue = newValue;
+      }
+    }
+  };
+  function proxyRefs(object) {
+    return new Proxy(object, {
+      get(target, key, recevier) {
+        let r = Reflect.get(target, key, recevier);
+        return r._v_isRef ? r.value : r;
+      },
+      set(target, key, value, recevier) {
+        let oldValue = target[key];
+        if (oldValue._v_isRef) {
+          oldValue.value = value;
+          return true;
+        } else {
+          return Reflect.set(target, key, value, recevier);
+        }
+      }
+    });
   }
   return __toCommonJS(src_exports);
 })();
