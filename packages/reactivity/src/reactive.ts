@@ -49,4 +49,6 @@ export function reactive(target) {
   //     return this.name;
   //   },
   // };
+  // 为什么建议Proxy和Reflect一起使用呢？因为Proxy和Reflect的方法都是一一对应的，在Proxy里使用Reflect会提高语义化
+  // 为什么要尽量把this放在代理对象receiver上，而不建议放原对象target上呢？因为原对象target有可能本来也是是另一个代理的代理对象，所以如果this一直放target上的话，出bug的概率会大大提高
 }

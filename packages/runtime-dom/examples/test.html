@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">手写render函数</div>
+    <script src="../dist/runtime-dom.global.js"></script>
+    <script>
+      console.log("-------VueRuntimeDom==", VueRuntimeDom);
+      const { createRenderer, render, h } = VueRuntimeDom;
+      //   console.log("--------", createRenderer);
+      render(h("h1", { style: { color: "red" } }, "hello"), app);
+    </script>
+  </body>
+</html>

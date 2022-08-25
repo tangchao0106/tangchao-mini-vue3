@@ -11,27 +11,27 @@
     <script src="../dist/reactivity.global.js"></script>
 
     <script>
-      const { ref, reactive, effect, proxyRefs } = VueReactivity;
-      // const state=ref()
-      //   const school = reactive({ name: "name", age: "22" });
-      //   let { name } = toRefs(school);
-      //   effect(() => {
-      //     document.getElementById(
-      //       "app"
-      //     ).innerHTML = `${school.name}---${school.hight}`;
-      //   });
+      const { ref, toRefs, reactive, effect, proxyRefs } = VueReactivity;
 
-      //   setTimeout(() => {
-      //     name.value = "xiugai==name";
-      //   }, 2000);
-      let name = ref("name");
-      let age = ref("1222");
-
-      let school = proxyRefs({ name, age });
-
+      const school = reactive({ name: "name", age: "22" });
+      let { name } = toRefs(school);
       effect(() => {
-        app.innerHTML = school.name;
+        document.getElementById(
+          "app"
+        ).innerHTML = `${school.name}---${school.hight}`;
       });
+
+      setTimeout(() => {
+        name.value = "xiugai==name";
+      }, 2000);
+      //   let name = ref("name");
+      //   let age = ref("1222");
+
+      //   let school = proxyRefs({ name, age });
+
+      //   effect(() => {
+      //     app.innerHTML = school.name;
+      //   });
     </script>
   </body>
 </html>

@@ -25,6 +25,7 @@ var VueReactivity = (() => {
     proxyRefs: () => proxyRefs,
     reactive: () => reactive,
     ref: () => ref,
+    toRefs: () => toRefs,
     watch: () => watch
   });
 
@@ -261,6 +262,28 @@ var VueReactivity = (() => {
       }
     }
   };
+  var ObjectRefImpl = class {
+    constructor(object, key) {
+      this.object = object;
+      this.key = key;
+    }
+    get value() {
+      return this.object[this.key];
+    }
+    set valuse(newValue) {
+      this.object[this.key] = newValue;
+    }
+  };
+  function toRef(object, key) {
+    return new ObjectRefImpl(object, key);
+  }
+  function toRefs(object) {
+    const result = isArray(object) ? new Array(object.length) : [];
+    for (const key in object) {
+      result[key] = toRef(object, key);
+    }
+    return result;
+  }
   function proxyRefs(object) {
     return new Proxy(object, {
       get(target, key, recevier) {
