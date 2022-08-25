@@ -20,6 +20,7 @@ var VueRuntimeDom = (() => {
   // packages/runtime-dom/src/index.ts
   var src_exports = {};
   __export(src_exports, {
+    createElement: () => createElement,
     createRenderer: () => createRenderer,
     h: () => h,
     render: () => render
@@ -125,15 +126,40 @@ var VueRuntimeDom = (() => {
     }
   }
 
+  // packages/runtime-core/src/createElement.ts
+  function createElement(vnode) {
+    console.log("\u76EE\u7684\u662F\u628A\u865A\u62DF\u8282\u70B9", vnode, "\u771F\u6B63\u53D8\u4E3Adom");
+    let domNode = document.createElement(vnode.sel);
+    if (vnode.text != "" && vnode.children == void 0 || vnode.children.length === 0) {
+      domNode.innerText = vnode.text;
+    }
+    console.log("domNo====", domNode);
+    vnode.elm = domNode;
+    return vnode.elm;
+  }
+
   // packages/runtime-core/src/renderer.ts
   function createRenderer(renderOptions2) {
     const render2 = (vnode, container) => {
+      createElement(vnode);
     };
     return { render: render2 };
   }
 
+  // packages/runtime-core/src/vnode.ts
+  function createVnode(sel, data, children, text, elm) {
+    const key = data.key;
+    return { sel, data, children, text, elm };
+  }
+
   // packages/runtime-core/src/h.ts
-  function h() {
+  function h(sel, data, c) {
+    if (arguments.length !== 3) {
+      throw new Error("\u4F4E\u914D\u7248h\u51FD\u6570");
+    }
+    if (typeof c === "string" || typeof c === "number") {
+      return createVnode(sel, data, void 0, c, void 0);
+    }
   }
 
   // packages/runtime-dom/src/index.ts

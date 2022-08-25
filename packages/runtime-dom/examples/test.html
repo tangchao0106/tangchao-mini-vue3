@@ -13,7 +13,12 @@
       console.log("-------VueRuntimeDom==", VueRuntimeDom);
       const { createRenderer, render, h } = VueRuntimeDom;
       //   console.log("--------", createRenderer);
-      render(h("h1", { style: { color: "red" } }, "hello"), app);
+      const container = document.getElementById("app");
+
+      render(h("h1", {}, "hello"), container);
+      const vnode = h("div", {}, "hello");
+      console.log("-----vnode---", vnode);
+      render(vnode, container);
     </script>
   </body>
 </html>
