@@ -1,7 +1,7 @@
 import { patchClass } from "../modules/class";
 import { patchStyle } from "../modules/style";
 
-import { patchAttr } from "../modules/Attr";
+import { patchAttr } from "../modules/attr";
 
 import { patchEvent } from "../modules/event";
 

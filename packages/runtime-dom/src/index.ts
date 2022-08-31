@@ -1,17 +1,49 @@
-import { nodeOps } from "./nodeOps";
-import { patchProp } from "./patchProp";
 import { createRenderer } from "@vue/runtime-core";
 
-const renderOptions = Object.assign(nodeOps, { patchProp });
+function createElement(type) {
+  return document.createElement(type);
+}
 
-console.log(renderOptions);
+function patchProp(el, key, prevVal, nextVal) {
+  const isOn = (key: string) => /^on[A-Z]/.test(key);
+  if (isOn(key)) {
+    const event = key.slice(2).toLowerCase();
+    el.addEventListener(event, nextVal);
+  } else {
+    if (nextVal === undefined || nextVal === null) {
+      el.removeAttribute(key);
+    } else {
+      el.setAttribute(key, nextVal);
+    }
+  }
+}
 
-// createRenderer(renderOptions).render(h('h1','hello'))
+function insert(child, parent, anchor) {
+  console.log(`insert==child=${child}  parent=${parent} anchor=${anchor}`);
 
-export function render(vnode, container) {
-  console.log("createRenderer-----", createRenderer(renderOptions));
+  parent.insertBefore(child, anchor || null);
+}
 
-  createRenderer(renderOptions).render(vnode, container);
+function remove(child) {
+  const parent = child.parentNode;
+  if (parent) {
+    parent.removeChild(child);
+  }
+}
+
+function setElementText(el, text) {
+  el.textContent = text;
+}
+const renderer: any = createRenderer({
+  createElement,
+  patchProp,
+  insert,
+  remove,
+  setElementText,
+});
+
+export function createApp(...args) {
+  return renderer.createApp(...args);
 }
 
 export * from "@vue/runtime-core";

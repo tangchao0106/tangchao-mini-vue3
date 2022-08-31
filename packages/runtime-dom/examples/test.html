@@ -7,18 +7,52 @@
     <title>Document</title>
   </head>
   <body>
-    <div id="app">手写render函数</div>
+    <div id="app"></div>
+
     <script src="../dist/runtime-dom.global.js"></script>
     <script>
       console.log("-------VueRuntimeDom==", VueRuntimeDom);
-      const { createRenderer, render, h } = VueRuntimeDom;
-      //   console.log("--------", createRenderer);
+      const { render, h, createApp } = VueRuntimeDom;
       const container = document.getElementById("app");
+      const App = {
+        // 必须要写 render
 
-      render(h("h1", {}, "hello"), container);
-      const vnode = h("div", {}, "hello");
-      console.log("-----vnode---", vnode);
-      render(vnode, container);
+        render() {
+          // ui
+          return h(
+            "div",
+            {
+              id: "root",
+              class: ["red", "hard"],
+              onClick() {
+                console.log("click");
+              },
+              onMousedown() {
+                console.log("mousedown");
+              },
+            },
+            [h("div", {}, "tangchao-mini-vue3," + this.msg)]
+          );
+        },
+
+        setup() {
+          return {
+            msg: "mini-vue-haha",
+          };
+        },
+      };
+
+      const App2 = {
+        render() {
+          return h("div", {}, [h("div", {}, "tangchao-mini-vue3," + this.msg)]);
+        },
+        setup() {
+          return {
+            msg: "mini-vue-haha",
+          };
+        },
+      };
+      createApp(App2).mount(container);
     </script>
   </body>
 </html>
