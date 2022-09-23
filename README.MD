@@ -1,3 +1,5 @@
+[VUE2学习笔记](https://mp.weixin.qq.com/s/s5IhxV2ooX3JN_X416nidA)
+
 ### VUE3 与VUE2 区别
 - VUE3 注重模块上的拆分。不用引入整个VUE，可以单独引入模块，耦合度降低，模块可以单独使用
 - VUE2 方法挂载在实例上，即时没有使用到，也会打包进来，VUE3 通过tree-shaking机制按需引入，减少打包体积
@@ -11,22 +13,3 @@
 -  幽灵依赖 例子express模块用到connect，开发的时候可以使用不需要安装，称为幽灵依赖。假如后期express不再使用connect模块，项目将缺少，
 - npm yarn 扁平化管理。包平铺开，减少了嵌套依赖，节省磁盘，解决 windows 260字符路径限制问题，。但正因为平铺开了，引入了幽灵依赖的问题，并且同名的包只会提升一个版本的，其余的版本依然会复制多次。
 - pnpm 一个包全局只保存一份，剩下的都是软硬连接，节省磁盘空间。因为通过链接的方式而不是复制，自然会快。
-
-### 安装
-- pnpm i typescript minimist esbuild -w -D
-``` 
-"buildOptions":{
-"name":"VueReactivity",//打包之后的名称
-"formats":[
-"global",//在浏览器中使用
-"cjs",//commonjs语法在node中使用
-"esm-bundler"//在es6模块下使用
-
-]
-}, 
-```
-- rm -rf node_modules
-- pnpm tsc --init 生成ts配置文件
-- // "dev": "node scripts/dev.js reactivity -f global"// //指定打包入口路径，指定哪个模块，指定格式
--sudo -i  npm install ts-node -g 插件code-runner
-
