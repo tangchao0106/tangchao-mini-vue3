@@ -17,3 +17,6 @@
 - // "dev": "node scripts/dev.js reactivity -f global"// //指定打包入口路径，指定哪个模块，指定格式
 -sudo -i  npm install ts-node -g 插件code-runner
 
+
+-sudo -i npm i cfonts -g
+-sudo  npm i cfonts -g
